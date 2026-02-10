@@ -9,22 +9,19 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const OFFICIAL_EMAIL = process.env.OFFICIAL_EMAIL || 'your_chitkara_email@chitkara.edu.in';
 
-// Initialize Gemini AI
 let genAI = null;
 if (process.env.GEMINI_API_KEY) {
   genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 }
 
-// Security middleware
 app.use(helmet());
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000, 
+  max: 100, 
   message: {
     is_success: false,
     error: 'Too many requests from this IP, please try again later.'
@@ -32,7 +29,7 @@ const limiter = rateLimit({
 });
 app.use('/bfhl', limiter);
 
-// Utility functions
+
 function fibonacci(n) {
   if (n < 0) throw new Error('Fibonacci input must be non-negative');
   if (n === 0) return [0];
@@ -75,7 +72,6 @@ function getLCM(arr) {
   return arr.reduce((acc, num) => lcm(acc, num));
 }
 
-// Validation functions
 function validateInput(req, res, next) {
   const body = req.body;
   const keys = Object.keys(body);
